@@ -1,0 +1,513 @@
+[gd_scene load_steps=26 format=2]
+
+[ext_resource path="res://MOD_CONTENT/Death Mech/Scripts/mech.gd" type="Script" id=1]
+[ext_resource path="res://Sfx/orbwalk.wav" type="AudioStream" id=2]
+[ext_resource path="res://MOD_CONTENT/Death Mech/Scenes/mech_in.tscn" type="PackedScene" id=3]
+[ext_resource path="res://MOD_CONTENT/Death Mech/Models/crus_mech.glb" type="PackedScene" id=4]
+[ext_resource path="res://Sfx/mechpain.wav" type="AudioStream" id=5]
+[ext_resource path="res://Sfx/mechsound.wav" type="AudioStream" id=6]
+[ext_resource path="res://Sfx/NPCs/missile_explosion.wav" type="AudioStream" id=7]
+[ext_resource path="res://Textures/Particles/Explosion1.png" type="Texture" id=8]
+[ext_resource path="res://Sfx/bullet_impact_metal.wav" type="AudioStream" id=9]
+
+[sub_resource type="Curve" id=3]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=4]
+curve = SubResource( 3 )
+
+[sub_resource type="ParticlesMaterial" id=5]
+lifetime_randomness = 0.09
+flag_rotate_y = true
+direction = Vector3( 0, -1, 0 )
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 10.0
+scale_curve = SubResource( 4 )
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_unshaded = true
+params_blend_mode = 1
+params_billboard_mode = 1
+params_billboard_keep_scale = true
+params_use_alpha_scissor = true
+params_alpha_scissor_threshold = 0.98
+albedo_color = Color( 0.00392157, 0.65098, 0, 1 )
+albedo_texture = ExtResource( 8 )
+
+[sub_resource type="QuadMesh" id=6]
+material = SubResource( 2 )
+
+[sub_resource type="GDScript" id=11]
+script/source = "extends StaticBody
+
+var parent
+
+func player_use():
+	parent.mech_entered()
+"
+
+[sub_resource type="BoxShape" id=10]
+extents = Vector3( 3.2216, 2.03855, 2.3078 )
+
+[sub_resource type="Animation" id=15]
+resource_name = "Explosion"
+length = 10.0
+tracks/0/type = "animation"
+tracks/0/path = NodePath("crus_mech/AnimationPlayer")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"clips": PoolStringArray( "Explosion" ),
+"times": PoolRealArray( 0 )
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("crus_mech:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 4.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/2/type = "transform"
+tracks/2/path = NodePath("KillZone")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = PoolRealArray( 0, 1, 0, 0, 0, 0, 0, 0, 1, 3, 3, 3 )
+tracks/3/type = "value"
+tracks/3/path = NodePath("KillZone/CollisionShape:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 4.2, 4.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
+tracks/4/type = "audio"
+tracks/4/path = NodePath("ExplosionSound")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 7 )
+} ],
+"times": PoolRealArray( 4.2 )
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("BigExplosion:emitting")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0, 4.2, 4.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, false ]
+}
+tracks/6/type = "audio"
+tracks/6/path = NodePath("SFX")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"clips": [ {
+"end_offset": 4.55,
+"start_offset": 0.0,
+"stream": ExtResource( 5 )
+} ],
+"times": PoolRealArray( 0 )
+}
+tracks/7/type = "audio"
+tracks/7/path = NodePath("SFXPitchDown")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 2 )
+}, {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 2 )
+} ],
+"times": PoolRealArray( 0, 0.9 )
+}
+tracks/8/type = "method"
+tracks/8/path = NodePath(".")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PoolRealArray( 10 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "delete"
+} ]
+}
+
+[sub_resource type="Animation" id=16]
+resource_name = "InstaExplosion"
+length = 5.0
+tracks/0/type = "transform"
+tracks/0/path = NodePath("KillZone")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = PoolRealArray( 0, 1, 0, 0, 0, 0, 0, 0, 1, 3, 3, 3 )
+tracks/1/type = "value"
+tracks/1/path = NodePath("KillZone/CollisionShape:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/2/type = "audio"
+tracks/2/path = NodePath("ExplosionSound")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 7 )
+} ],
+"times": PoolRealArray( 0 )
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("crus_mech:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("BigExplosion:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/5/type = "method"
+tracks/5/path = NodePath(".")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 5 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "delete"
+} ]
+}
+
+[sub_resource type="Animation" id=1]
+resource_name = "Intro"
+length = 5.0
+tracks/0/type = "animation"
+tracks/0/path = NodePath("crus_mech/AnimationPlayer")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"clips": PoolStringArray( "Intro" ),
+"times": PoolRealArray( 0 )
+}
+tracks/1/type = "audio"
+tracks/1/path = NodePath("SFXPitchDown")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 2 )
+} ],
+"times": PoolRealArray( 1.3 )
+}
+tracks/2/type = "audio"
+tracks/2/path = NodePath("SFX")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource( 6 )
+} ],
+"times": PoolRealArray( 1.8 )
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("crus_mech/MechModel/Skeleton/BoneAttachment7/Mech/Particle:emitting")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Explosion:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 1.3, 1.4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, false ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("KillZone/CollisionShape:disabled")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0, 1.3, 1.4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
+tracks/6/type = "method"
+tracks/6/path = NodePath(".")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 2 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "enable_damage"
+} ]
+}
+tracks/7/type = "transform"
+tracks/7/path = NodePath("KillZone")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = PoolRealArray( 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 )
+tracks/8/type = "value"
+tracks/8/path = NodePath("crus_mech:visible")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[sub_resource type="ParticlesMaterial" id=7]
+lifetime_randomness = 0.09
+flag_rotate_y = true
+direction = Vector3( 0, 1, 0 )
+spread = 90.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 45.0
+scale = 4.0
+scale_curve = SubResource( 4 )
+
+[sub_resource type="QuadMesh" id=17]
+material = SubResource( 2 )
+size = Vector2( 5, 5 )
+
+[sub_resource type="GDScript" id=9]
+script/source = "extends Area
+
+func _on_KillZone_body_entered(body):
+	if body.has_method(\"damage\"):
+		body.damage(1000, Vector3.ZERO, global_transform.origin, global_transform.origin)
+"
+
+[sub_resource type="BoxShape" id=8]
+extents = Vector3( 3, 2, 3 )
+
+[sub_resource type="BoxShape" id=13]
+extents = Vector3( 1, 2, 1 )
+
+[sub_resource type="AudioStreamRandomPitch" id=14]
+audio_stream = ExtResource( 9 )
+
+[node name="Mech" type="KinematicBody" groups=["Mech"]]
+collision_layer = 0
+collision_mask = 13
+script = ExtResource( 1 )
+
+[node name="MechController" parent="." instance=ExtResource( 3 )]
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 4, 0 )
+visible = false
+
+[node name="crus_mech" parent="." instance=ExtResource( 4 )]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
+
+[node name="Skeleton" parent="crus_mech/MechModel" index="0"]
+bones/3/bound_children = [ NodePath("BoneAttachment7") ]
+bones/4/bound_children = [ NodePath("BoneAttachment2") ]
+bones/5/bound_children = [ NodePath("BoneAttachment") ]
+bones/6/bound_children = [ NodePath("BoneAttachment3") ]
+bones/7/bound_children = [ NodePath("BoneAttachment4") ]
+bones/8/bound_children = [ NodePath("BoneAttachment6") ]
+bones/9/bound_children = [ NodePath("BoneAttachment5") ]
+
+[node name="BoneAttachment" parent="crus_mech/MechModel/Skeleton" index="0"]
+transform = Transform( 1.97154e-07, 4.86078e-07, -0.999993, 0.21388, -0.97686, -4.39428e-07, -0.97686, -0.21388, -3.82692e-07, 1.34085, -4.39163, 0.417123 )
+
+[node name="BoneAttachment2" parent="crus_mech/MechModel/Skeleton" index="1"]
+transform = Transform( 0, 5.51343e-07, -0.999993, -0.156228, -0.987721, -5.51339e-07, -0.987721, 0.156228, 0, 1.34085, -1.75445, 0 )
+
+[node name="BoneAttachment3" parent="crus_mech/MechModel/Skeleton" index="2"]
+transform = Transform( 0, 0, -1, -1, 0, 0, 0, 1, 0, 3.55605, -0.560534, -0.522901 )
+
+[node name="BoneAttachment4" parent="crus_mech/MechModel/Skeleton" index="3"]
+transform = Transform( 0, 0, -1, -1, 0, 0, 0, 1, 0, -3.55605, -0.560534, -0.522901 )
+
+[node name="BoneAttachment5" parent="crus_mech/MechModel/Skeleton" index="4"]
+transform = Transform( 1.97154e-07, 4.86078e-07, -0.999993, 0.21388, -0.97686, -4.39428e-07, -0.97686, -0.21388, -3.82692e-07, -1.34085, -4.39163, 0.417123 )
+
+[node name="BoneAttachment6" parent="crus_mech/MechModel/Skeleton" index="5"]
+transform = Transform( 0, 5.51343e-07, -0.999993, -0.156228, -0.987721, -5.51339e-07, -0.987721, 0.156228, 0, -1.34085, -1.75445, 0 )
+
+[node name="Particle" type="Particles" parent="crus_mech/MechModel/Skeleton/BoneAttachment7/Mech" index="0"]
+transform = Transform( 2, 0, 0, 0, 1.94669, -0.458707, 0, 0.458707, 1.94669, -0.0892661, -1.28427, -3.69902 )
+amount = 10
+lifetime = 0.2
+randomness = 1.0
+fract_delta = false
+local_coords = false
+process_material = SubResource( 5 )
+draw_pass_1 = SubResource( 6 )
+
+[node name="Collision" type="StaticBody" parent="crus_mech/MechModel/Skeleton/BoneAttachment7/Mech" index="1"]
+collision_layer = 256
+collision_mask = 2
+script = SubResource( 11 )
+
+[node name="Shape" type="CollisionShape" parent="crus_mech/MechModel/Skeleton/BoneAttachment7/Mech/Collision"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.280267, -1.14596 )
+shape = SubResource( 10 )
+
+[node name="SFXPitchDown" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 2 )
+unit_db = 8.0
+unit_size = 10.0
+max_db = 5.0
+pitch_scale = 0.25
+
+[node name="SFX" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 6 )
+unit_db = 8.0
+pitch_scale = 0.75
+
+[node name="ExplosionSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 7 )
+unit_db = 8.0
+unit_size = 16.0
+max_db = 6.0
+pitch_scale = 0.5
+
+[node name="AnimationController" type="AnimationPlayer" parent="."]
+autoplay = "Intro"
+anims/Explosion = SubResource( 15 )
+anims/InstaExplosion = SubResource( 16 )
+anims/Intro = SubResource( 1 )
+
+[node name="Explosion" type="Particles" parent="."]
+emitting = false
+amount = 56
+lifetime = 0.2
+randomness = 1.0
+fract_delta = false
+local_coords = false
+process_material = SubResource( 7 )
+draw_pass_1 = SubResource( 6 )
+
+[node name="BigExplosion" type="Particles" parent="."]
+emitting = false
+amount = 56
+lifetime = 0.2
+randomness = 1.0
+fract_delta = false
+local_coords = false
+process_material = SubResource( 7 )
+draw_pass_1 = SubResource( 17 )
+
+[node name="KillZone" type="Area" parent="."]
+collision_mask = 479
+script = SubResource( 9 )
+
+[node name="CollisionShape" type="CollisionShape" parent="KillZone"]
+shape = SubResource( 8 )
+disabled = true
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
+shape = SubResource( 13 )
+
+[node name="Damage" type="AudioStreamPlayer" parent="."]
+stream = SubResource( 14 )
+pitch_scale = 0.35
+
+[connection signal="health_changed" from="." to="MechController" method="change_health_speed"]
+[connection signal="health_changed" from="." to="MechController/Camera/LerpNode/Monitor" method="change_speed"]
+[connection signal="health_changed" from="." to="MechController/Camera/LerpNode/Health" method="change_value"]
+[connection signal="exploded" from="MechController/Camera/LerpNode/Explosion" to="." method="destroy"]
+[connection signal="body_entered" from="KillZone" to="KillZone" method="_on_KillZone_body_entered"]
+
+[editable path="MechController"]
+[editable path="MechController/Camera/LerpNode/crus_mech_in"]
+[editable path="crus_mech"]
