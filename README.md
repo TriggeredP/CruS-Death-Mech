@@ -27,3 +27,11 @@ You can change it there:
 - Health
 - Mech rent and lost price
 - And bind for throwing a grenade
+
+## Compatibility
+At the moment, this mod is not compatible with:
+
+- EZ Reload
+- Slide Implant
+
+I will try to fix it in the future
