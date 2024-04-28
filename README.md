@@ -6,7 +6,7 @@ The mech has two miniguns and 2000 health points
 
 ## Install
 To install mod, you will need the [Cruelty Squad Mod Loader](https://github.com/CruS-Modding-Infrastructure/crus-modloader)
-Then download the file from the release and unzip it along the way:
+Then download the file from the release (NOT FROM CODE -> DOWNLOAD ZIP) and unzip it along the way:
 `%appdata%\Godot\app_userdata\Cruelty Squad\mods\`
 
 ## Usage
